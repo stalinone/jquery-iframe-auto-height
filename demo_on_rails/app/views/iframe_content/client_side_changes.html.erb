@@ -1,0 +1,33 @@
+<a href="javascript:void(0)" id="toggle-link">Toggle Picture</a>
+
+<p style="display:none; margin-top: 12px" id="pic-container">
+  <%= image_tag 'federer.jpg', :alt => "Roger Federer"%>
+</p>
+
+<%= javascript_include_tag "application" %>
+<script>
+  $('#toggle-link').click(function () {
+    $('#pic-container').toggle();
+    
+    thisIframe = $('iframe', window.parent.document);
+    thisIframe.get(0).forceResizeHeight(thisIframe.get(0));
+    // console.debug(thisIframe);
+    // console.debug(thisIframe.attr('id'));
+    // console.debug(thisIframe.get(0).forceResizeHeight);
+    // console.debug(thisIframe.iframeAutoHeight().forceResizeHeight);
+    
+    //thisIframe.triggerHandler('load');
+//    thisIframe.iframeAutoHeight();
+
+    
+    // setTimeout(function () {
+    //   console.debug("trigger load");
+    //   $(thisIframe).triggerHandler('load');  
+    //   console.debug("done");      
+    // }, 500);
+    
+    
+    // thisIframe = $('iframe', window.parent.document)
+    // console.debug(thisIframe);
+  });
+</script>

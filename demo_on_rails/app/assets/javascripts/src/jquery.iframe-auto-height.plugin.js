@@ -116,7 +116,11 @@
           resizeHeight(this);
         });
       } // if browser
-             
+
+      this.forceResizeHeight = resizeHeight;  
+      // this.forceResizeHeight = function (iframeInstance) {
+      //   resizeHeight(iframeInstance);
+      // };
     }); // $(this).each(function () {    
   }; // $.fn.iframeAutoHeight = function (options) {
 }(jQuery)); // (function ($) {

@@ -27,6 +27,13 @@ class Container
         debug: true
         callback: (callbackObject) -> console.debug "CallBack: height='#{callbackObject.newFrameHeight}' / iframe-id='#{jQuery(this).attr('id')}'"
 
+  index6: () ->
+    jQuery ->
+      $('iframe').iframeAutoHeight
+        debug: true
+        minHeight: 480
+        callback: (callbackObject) -> console.debug "load callback"
+
   standardIframe: () ->
     jQuery ->
       $('iframe').iframeAutoHeight
