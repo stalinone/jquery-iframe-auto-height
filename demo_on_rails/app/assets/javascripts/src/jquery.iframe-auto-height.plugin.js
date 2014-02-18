@@ -21,7 +21,7 @@
       message.push("WARNING: you appear to be using a newer version of jquery which does not support the $.browser variable.");
       message.push("The jQuery iframe auto height plugin relies heavly on the $.browser features.");
       message.push("Install jquery-browser: https://raw.github.com/house9/jquery-iframe-auto-height/master/release/jquery.browser.js");
-      alert(message.join("\n"));
+      debug(message.join("\n"));
       return $;
     }
 
@@ -104,9 +104,6 @@
       }
       // ******************************************************
 
-      // for use by webkit only
-      var loadCounter = 0;
-
       // resizeHeight
       function resizeHeight(iframe) {
         if (options.diagnostics) {
@@ -153,44 +150,30 @@
         }
       }
 
-      // Check if browser is Webkit (Safari/Chrome) or Opera
-      if ($.browser.webkit || $.browser.opera) {
-        debug("browser is webkit or opera");
-
-        // Start timer when loaded.
-        $(this).load(function () {
-          var delay = 0;
-          var iframe = this;
-
-          var delayedResize = function () {
-            resizeHeight(iframe);
-          };
-
-          if (loadCounter === 0) {
-            // delay the first one
-            delay = 500;
-          } else {
-            // Reset iframe height to 0 to force new frame size to fit window properly
-            // this is only an issue when going from large to small iframe, not executed on page load
-            iframe.style.height = options.minHeight + 'px';
-          }
-
-          debug("load delay: " + delay);
-          setTimeout(delayedResize, delay);
-          loadCounter++;
+      // run: manually check
+      debug("setup resizing trigger");
+      var iframe = this;
+      if (iframe.contentWindow.document.readyState==='complete') {
+        debug("iframe loaded before calling");
+        resizeHeight(iframe);
+        // fallback
+        $(iframe).bind("load",function () {
+          resizeHeight(iframe);
         });
-
-        // Safari and Opera need a kick-start.
-        var source = $(this).attr('src');
-        $(this).attr('src', '');
-        $(this).attr('src', source);
       } else {
-        // For other browsers.
-        $(this).load(function () {
-          resizeHeight(this);
+        debug("iframe hasnt loaded");
+        $(iframe).bind("load",function () {
+          resizeHeight(iframe);
         });
-      } // if browser
-
+        //set kick-start timer in prevent of browser halting
+        var tol = 3000;
+        setTimeout(function(){
+          if (!(iframe.contentWindow.document.readyState==='complete')) {
+            debug("wait too long, kick-start");
+            resizeHeight(iframe);
+          }
+        },tol);
+      }// end run
     }); // $(this).each(function () {
   }; // $.fn.iframeAutoHeight = function (options) {
 }(jQuery)); // (function ($) {
